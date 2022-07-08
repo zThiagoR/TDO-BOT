@@ -1,4 +1,4 @@
-import { 
+import {  
   ButtonInteraction, 
   MessageActionRow, 
   MessageButton, 
@@ -6,12 +6,12 @@ import {
   MessageEmbedOptions 
 } from "discord.js";
 
-export async function EditRole(int: ButtonInteraction) {
-  let roleselected: string;
+export async function EditChannel(int: ButtonInteraction) {
+  let channelselected: string;
 
   const embed = {
-    title: `Configuração da ${int.customId === 'EditRoleChat' ? 'Mov.Chat' : 'Mov.Call'}`,
-    description: `Por favor, mencione o ID do cargo que deseja atualizar`,
+    title: `Configuração da ${int.customId === 'EditChannel' ? 'Mov.Chat' : 'Mov.Call'}`,
+    description: `Por favor, mencione o ID do canal/categoria que deseja atualizar`,
   } as MessageEmbedOptions;
 
 
@@ -39,7 +39,7 @@ export async function EditRole(int: ButtonInteraction) {
   const filter = (i: MessageComponentInteraction) => i.user.id !== int.user.id ? i.deferUpdate() : ['confirmar'].includes(i.customId)
   const collectorButton = int.channel.createMessageComponentCollector({
     filter: filter as any,
-    max: 1
+    max: 5
   })
 
   collectorMessage.on('collect', async (m) => {
@@ -57,13 +57,13 @@ export async function EditRole(int: ButtonInteraction) {
         
       int.editReply({
         embeds: [{
-          title: `Configuração da ${int.customId === 'EditRoleChat' ? 'Mov.Chat' : 'Mov.Call'}`,
-          description: `Você deseja atualizar o cargo <@&${m.content}>?`,
+          title: `Configuração da ${int.customId === 'EditChannel' ? 'Mov.Chat' : 'Mov.Call'}`,
+          description: `Você deseja atualizar o canal/categoria <#${m.content}>?`,
         }],
         components: [row]
       })
 
-      roleselected = m.content
+      channelselected = m.content
     }
   })
 
@@ -71,8 +71,8 @@ export async function EditRole(int: ButtonInteraction) {
     if(reason === 'time') {
       int.editReply({
         embeds: [{
-          title: `Configuração da ${int.customId === 'EditRoleChat' ? 'Mov.Chat' : 'Mov.Call'}`,
-          description: `Você não confirmou o cargo, cancelando a operação`,
+          title: `Configuração da ${int.customId === 'EditChannel' ? 'Mov.Chat' : 'Mov.Call'}`,
+          description: `Você não confirmou o canal/categoria, cancelando a operação`,
         }],
         components: []
       })
@@ -83,13 +83,13 @@ export async function EditRole(int: ButtonInteraction) {
     if(i.customId === 'confirmar') {
       int.editReply({
         embeds: [{
-          title: `Configuração da ${int.customId === 'EditRoleChat' ? 'Mov.Chat' : 'Mov.Call'}`,
-          description: `Você atualizou o cargo para <@&${roleselected}>`,
+          title: `Configuração da ${int.customId === 'EditChannel' ? 'Mov.Chat' : 'Mov.Call'}`,
+          description: `Você atualizou o canal para <#${channelselected}>`,
         }],
         components: []
       })
 
-      int.client.db.roles.set(`${int.guildId}.cargos.${int.customId === 'EditRoleChat' ? 'movchat' : 'movcall'}`, roleselected)
+      int.client.db.config.set(`${int.guildId}.canais.${int.customId === 'EditChannel' ? 'movchat' : 'movcall'}`, channelselected)
 
       collectorMessage.stop()
       collectorButton.stop()
