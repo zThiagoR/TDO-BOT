@@ -3,7 +3,7 @@ import { Client, Message, Collection } from "discord.js";
 import { CommandExecute as CommandEmbed } from "../Utils/embeds";
 import PermissionsList from "../config/PermissionsList";
 import { config } from "../config";
-
+import BlacklistWords from "../Utils/functions/BlacklistWords";
 
 export default class CommandExecute {
   type: string;
@@ -21,47 +21,7 @@ export default class CommandExecute {
       if (channelMovChat && channelMovChat === msg.channel.id) {
         client.db.messages.add(`${msg.author.id}.semanal`, 1, { write: true })
         client.db.messages.add(`${msg.author.id}.acumulados`, 1, { write: true })
-      }
-      // if(['sexo'].some(x => msg.author.username.toLowerCase().includes(x))) {
-      //   msg.reply(`Não pode utilizar seu nick inadequado, e seu nick já foi alterado!`)
-      //   msg.guild.members.cache.get(msg.author.id).setNickname(`Uso de nick inadequado!`)
-      // }
-
-      if(msg.content.match(/alguém namora/gi)) {
-        return msg.reply({
-          embeds: [{
-            title: 'Estou solteiro, baby',
-            description: 'Não sei como responder, mas você pode me chamar de **"namorado"** ou **"casado"** se preferir.\nMas prefiro ser chamado de amante ou ficante pra ter mais de 1 pessoa para formar trio romance',
-          }]
-        })
-      }
-
-      if(['gf', 'gozofone'].some(x => msg.content.toLowerCase().includes(x))) {
-        msg.delete();
-        msg.channel.send({
-          content: `<@${msg.author.id}>`,
-          embeds:[{
-            title: `CARENTE FOI DETECTADO COM SUCESSO!`,
-            color: 0xFFFF50,
-            description: `**Tem coisa melhor que fazer GF**...\nOuvir a voz da pessoa que é magnifico, ver série, ver filme, fazer caminhada na rua, jogar joguinhos, ler livros, estudar pro curso, praticar e entre outros...`,
-          }]
-        }).then(msg => {
-          setTimeout(() => { msg.delete(); }, 5000);
-        })
-      }
-
-      if(['sexo', 'safada', 'me come', 'vibrador', 'pau de borracha', 'transar', 'mama'].some(x => msg.content.toLowerCase().includes(x))) {
-        msg.delete();
-        msg.channel.send({
-          content: `<@${msg.author.id}>`,
-          embeds: [{
-            color: 0x000000,
-            title: '🔞 ANTI-PUTARIA',
-            description: 'Não é mais permitido falar de **ATOS LIBIDINOSOS** NESTE SERVIDOR!!!',
-          }]
-        }).then(msg => {
-          setTimeout(() => { msg.delete(); }, 5000);
-        })
+        BlacklistWords(msg);
       }
 
       if(msg.mentions.members.first()) {
