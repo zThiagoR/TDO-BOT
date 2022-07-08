@@ -1,4 +1,5 @@
 import { Client, Collection, Interaction } from 'discord.js';
+import { EditChannel } from '../Utils/functions/MovConfig/EditChannel';
 import { EditRole } from '../Utils/functions/MovConfig/EditRole';
 
 export default class InteractionExecute {
@@ -57,8 +58,8 @@ export default class InteractionExecute {
 
       if(int.customId === 'EditRoleChat') return EditRole(int);
       if(int.customId === 'EditRoleCall') return EditRole(int);
-      if(int.customId === 'editChannel') {}
-      if(int.customId === 'EditCategory') {}
+      if(int.customId === 'EditChannel') return EditChannel(int);
+      if(int.customId === 'EditCategory') return EditChannel(int);
       if(int.customId === 'movchat') {}
       if(int.customId === 'movcall') {}
       if(int.customId === 'recrutamento') {}
