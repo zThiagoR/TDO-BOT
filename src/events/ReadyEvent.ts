@@ -13,7 +13,7 @@ export default class ReadyApplication {
   async execute(client: Client<true>) {
 
     client.user.setActivity({
-      name: "Batalha Real na Craftlandia!",
+      name: "Novo bot está por vim...",
       type: "LISTENING"
     });
 
