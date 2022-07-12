@@ -18,10 +18,11 @@ export default class CommandExecute {
     if (msg.author.bot) return;
     if (!msg.content.startsWith(config.prefix)) {
       const channelMovChat = client.db.config.get(`${msg.guildId}.canais.movchat`)
-      if (channelMovChat && channelMovChat === msg.channel.id) {
+      const roleMovChat = client.db.roles.get(`${msg.guildId}.cargos.movchat`)
+      const channelMov = channelMovChat && channelMovChat === msg.channel.id;
+      if (channelMov && msg.member.roles.cache.has(roleMovChat)) {
         client.db.messages.add(`${msg.author.id}.semanal`, 1, { write: true })
         client.db.messages.add(`${msg.author.id}.acumulados`, 1, { write: true })
-        BlacklistWords(msg);
       }
 
       if(msg.mentions.members.first()) {
@@ -40,6 +41,8 @@ export default class CommandExecute {
 
         client.db.users.delete(`${msg.author.id}.afk`)
       }
+
+      BlacklistWords(msg);
     };
     
     const args = msg.content.slice(config.prefix.length).trim().split(/ +/);
