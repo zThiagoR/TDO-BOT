@@ -23,6 +23,8 @@ export default class CommandExecute {
       if (channelMov && msg.member.roles.cache.has(roleMovChat)) {
         client.db.messages.add(`${msg.author.id}.semanal`, 1, { write: true })
         client.db.messages.add(`${msg.author.id}.acumulados`, 1, { write: true })
+
+        BlacklistWords(msg);
       }
 
       if(msg.mentions.members.first()) {
@@ -41,8 +43,6 @@ export default class CommandExecute {
 
         client.db.users.delete(`${msg.author.id}.afk`)
       }
-
-      BlacklistWords(msg);
     };
     
     const args = msg.content.slice(config.prefix.length).trim().split(/ +/);
